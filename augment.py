@@ -5,6 +5,9 @@ import torch
 import warnings
 import os
 import datetime
+import numexpr
+
+numexpr.set_num_threads(numexpr.detect_number_of_cores())
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
@@ -74,9 +77,14 @@ def run():
         all_paraphrases.append(paraphrases)
         st.markdown(f'Augmentation for: *"{question}*"')
         para_df = pd.DataFrame(paraphrases)
-        para_df.columns = ['sentence', 'score']
+        try:
+            para_df.columns = ['sentence', 'score']
+        except:
+            pass
         st.write(para_df)
         bar.progress(int(i / len(questions_list) * 100))
+
+
 
     st.balloons()
 
