@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import warnings
 import os
-
+import datetime
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
@@ -18,7 +18,12 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.image('./healthee-logo.png')
-st.header("l'augmentateur")
+
+col1, mid, col2 = st.columns([1, 1, 20])
+with col1:
+    st.image('./chef.jpeg', width=60)
+with col2:
+    st.header("l'augmentateur")
 
 uploaded_file = st.file_uploader("Choose a file", type={"csv", "txt"})
 
@@ -47,32 +52,40 @@ all_paraphrases = []
 
 
 def run():
-    st.write('Please wait, model is running')
+    st.write('Please wait, heating up the stove')
     if reproducibility:
         random_state(1234)
 
     if cols:
         questions_list = df[cols].to_list()
 
-    with st.spinner('Initializing augmentation model...'):
+    with st.spinner('Initializing augmentation recipe...'):
         parrot = Parrot(model_tag="prithivida/parrot_paraphraser_on_T5")
 
     bar = st.progress(0)
 
     for i, question in enumerate(questions_list):
-        with st.spinner('working...'):
+        with st.spinner('cooking...'):
             paraphrases = parrot.augment(input_phrase=question,
                                          use_gpu=False,
                                          do_diverse=do_diverse,
                                          fluency_threshold=fluency,
                                          adequacy_threshold=adequacy)
         all_paraphrases.append(paraphrases)
-        st.markdown(f'Augmentation for: *"{question}"*')
-        st.write(pd.DataFrame(paraphrases))
-        bar.progress(int(i / len(questions_list)) * 100)
-        if len(all_paraphrases) > 0:
-            st.sidebar.download_button('Export all paraphrases', pd.DataFrame(all_paraphrases).to_csv().encode('utf-8'))
+        st.markdown(f'Augmentation for: *"{question}*"')
+        para_df = pd.DataFrame(paraphrases)
+        para_df.columns = ['sentence', 'score']
+        st.write(para_df)
+        bar.progress(int(i / len(questions_list) * 100))
+
+    st.balloons()
 
 
 if uploaded_file and cols:
     st.button('Augment!', on_click=run)
+
+if len(all_paraphrases) > 0:
+    st.sidebar.download_button('Export all paraphrases',
+                               pd.DataFrame(all_paraphrases).to_csv().encode('utf-8'),
+                               file_name=str(round(datetime.datetime.timestamp(datetime.datetime.now()))) +
+                                         '_augmentation_output.csv')
