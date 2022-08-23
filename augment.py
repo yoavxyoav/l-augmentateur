@@ -85,7 +85,7 @@ def run():
         bar.progress(int(i / len(questions_list) * 100))
 
 
-
+    bar.progress(100)
     st.balloons()
 
 
