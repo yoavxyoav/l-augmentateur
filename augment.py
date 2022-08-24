@@ -84,7 +84,6 @@ def run():
         st.write(para_df)
         bar.progress(int(i / len(questions_list) * 100))
 
-
     bar.progress(100)
     st.balloons()
 
