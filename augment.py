@@ -25,9 +25,9 @@ clicked = None
 ##########
 # Header #
 ##########
-
+st.set_page_config("l'augmentateur", "./chef.jpeg")
 header = st.container()
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 header.image('./healthee-logo.png')
 
 col1, mid, col2 = header.columns([1, 1, 20])
@@ -134,6 +134,7 @@ if uploaded_file or len(user_text) > 4:
         run(results)
         if len(all_paraphrases) > 0:
             results.download_button('Export all paraphrases',
-                                    pd.DataFrame(pd.concat([pd.DataFrame(x) for x in all_paraphrases])).to_csv().encode('utf-8'),
+                                    pd.DataFrame(pd.concat([pd.DataFrame(x) for x in all_paraphrases])).to_csv().encode(
+                                        'utf-8'),
                                     file_name=str(round(datetime.timestamp(datetime.now()))) +
                                               '_augmentation_output.csv')
