@@ -22,7 +22,7 @@ hide_streamlit_style = """
             """
 
 audio_js = """
-<span onclick="play()">&#128264;</span>
+<span style="cursor: pointer;", onclick="play()">&#128264;</span>
 <script>
   function play() {
     var audio = document.getElementById("audio");
