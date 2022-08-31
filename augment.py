@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit.components.v1 import html
 from parrot import Parrot
 import pandas as pd
 import torch
@@ -20,6 +21,17 @@ hide_streamlit_style = """
             </style>
             """
 
+audio_js = """
+<span onclick="play()">&#128264;</span>
+<script>
+  function play() {
+    var audio = document.getElementById("audio");
+    audio.play();
+  }
+</script>
+<audio id="audio" src="https://voice.reverso.net/RestPronunciation.svc/v1/output=json/GetVoiceStream/voiceName=Bruno22k?voiceSpeed=80&inputText=bCdhdWdtZW50YXRldXI="></audio>
+"""
+
 clicked = None
 
 ##########
@@ -30,11 +42,13 @@ header = st.container()
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 header.image('./healthee-logo.png')
 
-col1, mid, col2 = header.columns([1, 1, 20])
+col1, gap1, col2, gap2, col3 = header.columns([1, 3, 1, 11, 20])
 with col1:
-    st.image('./chef.jpeg', width=60)
+    st.image('./chef.jpeg', width=70)
 with col2:
     st.header("l'augmentateur")
+with col3:
+    html(audio_js, height=70)
 
 #########
 # Knobs #
